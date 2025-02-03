@@ -1,6 +1,9 @@
 package frc.robot.subsystems.feeder;
 
+import org.littletonrobotics.junction.AutoLog;
+
 public interface FeederIO {
+    @AutoLog
     public class feederIOInputs {
         public double speed;
     }

@@ -13,6 +13,9 @@ import frc.robot.GlobalConstants;
 import frc.robot.subsystems.climber.ClimberIOReal;
 import frc.robot.subsystems.climber.ClimberIOSim;
 import frc.robot.subsystems.climber.ClimberSubsystem;
+import frc.robot.subsystems.feeder.FeederIOReal;
+import frc.robot.subsystems.feeder.FeederIOSim;
+import frc.robot.subsystems.feeder.FeederSubsystems;
 import frc.robot.subsystems.leds.LEDIOPWM;
 import frc.robot.subsystems.leds.LEDIOSim;
 import frc.robot.subsystems.leds.LEDSubsystem;
@@ -51,6 +54,13 @@ public class Superstructure extends SubsystemBase {
               : new ClimberSubsystem(new ClimberIOSim()))
           : null;
 
+  private final FeederSubsystems feeder =
+          Config.Subsystems.FEEDER_ENABLED
+          ? (MODE == GlobalConstants.RobotMode.REAL
+                  ? new FeederSubsystems(new FeederIOReal())
+                  : new FeederSubsystems(new FeederIOSim()))
+          : null;
+
   public Superstructure(Supplier<Pose2d> drivePoseSupplier) {
     this.drivePoseSupplier = drivePoseSupplier;
   }
@@ -63,7 +73,10 @@ public class Superstructure extends SubsystemBase {
     LEVEL_FOUR,
     SOURCE,
     SHALLOW_CLIMB,
-    DEEP_CLIMB
+    DEEP_CLIMB,
+    FEEDER_VOLTAGE,
+    FEEDER_CURRENT,
+    FEEDER_VELOCITY
   }
 
   /**
@@ -95,6 +108,7 @@ public class Superstructure extends SubsystemBase {
               1);
         if (pivot != null) pivot.setGoal(PivotSubsystem.PivotGoal.IDLING);
         if (climber != null) climber.setGoal(ClimberSubsystem.ClimberGoal.IDLING);
+        if (feeder != null) feeder.setGoal(FeederSubsystems.FeederGoal.IDLING);
       }
       case LEVEL_ONE -> {
         if (pivot != null) pivot.setGoal(PivotSubsystem.PivotGoal.LEVEL_ONE);
